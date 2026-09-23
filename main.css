@@ -1,0 +1,326 @@
+/* ============================================================
+   ????
+   ============================================================ */
+html, body {
+  margin: 0;
+  height: 100%;
+  background: radial-gradient(circle at 50% 70%, #1a0e08 0%, #000 75%);
+  overflow: hidden;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #f5d9b0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* ============================================================
+   ?????????
+   ============================================================ */
+#hint {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 140px);
+  font-size: 18px;
+  opacity: 0.5;
+  letter-spacing: 0.5px;
+  text-align: center;
+  line-height: 1.35;
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================================
+   ????????? — ??????? ?????
+   ============================================================ */
+#settings {
+  position: fixed;
+  top: 18px;
+  left: 10px;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 8px;
+  z-index: 10;
+  padding: 10px;
+  background: rgba(20, 10, 5, 0.55);
+  border: 1px solid rgba(255, 150, 60, 0.25);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  max-width: 200px;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+#settings p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.55;
+  text-align: center;
+}
+#settings p:first-child { margin-top: 0; }
+
+#settings #backgrounds,
+#settings #ui {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+#settings button {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #ffd7a8;
+  background: rgba(60, 30, 10, 0.7);
+  border: 1px solid rgba(255, 150, 60, 0.4);
+  border-radius: 10px;
+  transition: all 0.15s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#settings button:hover { background: rgba(120, 60, 20, 0.8); }
+#settings button.on {
+  background: rgba(255, 130, 30, 0.85);
+  color: #1a0e08;
+  border-color: #ffb060;
+  box-shadow: 0 0 14px rgba(255, 140, 40, 0.6);
+}
+
+/* ============================================================
+   ????? ??????.??????
+   ============================================================ */
+iframe {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 320px;
+  height: 180px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 15;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* ============================================================
+   ?????? ??????? ??????????
+   ============================================================ */
+#toggle-ui {
+  position: fixed;
+  top: max(18px, env(safe-area-inset-top, 18px));
+  right: max(18px, env(safe-area-inset-right, 18px));
+  z-index: 100;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 150, 60, 0.4);
+  background: rgba(30, 15, 8, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffd7a8;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#toggle-ui:hover {
+  background: rgba(120, 60, 20, 0.85);
+  transform: scale(1.06);
+  box-shadow: 0 0 16px rgba(255, 140, 40, 0.5);
+}
+#toggle-ui:active {
+  transform: scale(0.96);
+}
+
+#toggle-ui .icon-eye-off { display: none; }
+
+body.ui-hidden #toggle-ui .icon-eye     { display: none; }
+body.ui-hidden #toggle-ui .icon-eye-off { display: inline; }
+
+/* ---- ?????? (?????? ???, ??? ???? hover) ---- */
+#toggle-ui .tooltip {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 12px);
+  transform: translateY(-50%);
+  background: rgba(30, 15, 8, 0.92);
+  color: #ffd7a8;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  border: 1px solid rgba(255, 150, 60, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+@media (hover: hover) {
+  #toggle-ui:hover .tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+}
+
+#toggle-ui .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: rgba(30, 15, 8, 0.92);
+}
+
+/* ---- ??????-?????????? (?????? ?????????) ---- */
+#toggle-settings {
+  display: none;
+  position: fixed;
+  top: max(18px, env(safe-area-inset-top, 18px));
+  left: max(18px, env(safe-area-inset-left, 18px));
+  z-index: 100;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 150, 60, 0.4);
+  background: rgba(30, 15, 8, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffd7a8;
+  font-size: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+#toggle-settings:active {
+  background: rgba(120, 60, 20, 0.85);
+}
+
+/* ============================================================
+   ??????? ??????????
+   ============================================================ */
+body.ui-hidden #hint,
+body.ui-hidden #settings,
+body.ui-hidden iframe,
+body.ui-hidden #toggle-settings {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+/* ============================================================
+   ????????? ????????? (?? 720px)
+   ============================================================ */
+@media (max-width: 720px) {
+
+  #hint {
+    font-size: 12px;
+    top: max(12px, env(safe-area-inset-top, 12px));
+    max-width: calc(100vw - 130px);
+    line-height: 1.3;
+  }
+  #hint br { display: none; }
+
+  /* ?????????? ?????????? */
+  #toggle-settings { display: flex; }
+
+  /* ?????? ???????? — ?????????? sheet ????? */
+  #settings {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    width: 100%;
+    flex-direction: column;
+    border-radius: 18px 18px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding: 14px 14px max(14px, env(safe-area-inset-bottom, 14px));
+    background: rgba(20, 10, 5, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform: translateY(110%);
+  }
+
+  /* ???????? ????????? */
+  body.settings-open #settings {
+    transform: translateY(0);
+  }
+
+  /* ??? ??????? UI — ?????? ??????? ???? */
+  body.ui-hidden #settings {
+    transform: translateY(110%);
+  }
+
+  /* ?????? — ??????? ??? ???? */
+  #settings button {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  /* ????? — ????????? ????? ?? ?????? */
+  iframe {
+    left: 50%;
+    right: auto;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    transform: translateX(-50%);
+    width: calc(100vw - 24px);
+    max-width: 360px;
+    height: 80px;
+    opacity: 0.92;
+  }
+
+  /* ?????? ?????????? ?? ???-??????????? */
+  #toggle-ui .tooltip { display: none; }
+}
+
+/* ============================================================
+   ????? ????? ?????? (?? 380px)
+   ============================================================ */
+@media (max-width: 380px) {
+  #hint { font-size: 10px; }
+
+  #settings button {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  #toggle-ui,
+  #toggle-settings {
+    width: 40px;
+    height: 40px;
+    font-size: 17px;
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Открыточка</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">Этот день ты можешь провести с теми, кто тебе по-настоящему дорог <br> Там, где ты сам хочешь быть</div>
+
+<button id="toggle-ui" aria-label="Скрыть или показать интерфейс">
+  <span class="icon-eye">👁</span>
+  <span class="icon-eye-off">🙈</span>
+  <span class="tooltip">Скрыть настройки</span>
+</button>
+
+<div id="settings">
+  <p>Место</p>
+  <div id="backgrounds">
+    <button data-id="sea" class="on">1</button>
+    <button data-id="mountains">2</button>
+    <button data-id="sirius">3</button>
+    <button data-id="pustyn">4</button>
+    <button data-id="lipetsk">5</button>
+    <button data-id="nizhniy">6</button>
+  </div>
+  <p>Компания</p>
+  <div id="ui">
+    <button data-id="girl">+1</button>
+    <button data-id="cat">Будущий друг</button>
+    <button data-id="group">Самые близкие</button>
+    <button data-id="family">Семья</button>
+    <button data-id="uni">Сириус форева</button>
+  </div>
+</div>
+
+<iframe frameborder="0" allow="clipboard-write" src="https://music.yandex.ru/iframe/playlist/NatalieEnd/1012">Слушайте <a href="https://music.yandex.ru/playlists/332d528f-767f-12c9-a94e-d6c18714f963?utm_source=web&utm_medium=copy_link">Это всё ты</a> — <a href="https://music.yandex.ru/users/NatalieEnd">Салокина Наталья</a> на Яндекс Музыке</iframe>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
